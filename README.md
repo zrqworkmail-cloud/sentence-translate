@@ -11,8 +11,10 @@
 
 ## 安装
 
+从 [Releases](https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest) 下载最新的 `.xpi`，然后：
+
 1. 打开 Zotero → 工具 → 插件 → 齿轮 → Install Plugin From File…
-2. 选择 `build/sentence-translate-<version>.xpi`
+2. 选择下载的 `sentence-translate-<version>.xpi`
 3. 打开一篇 PDF，直接点句子即可
 
 如果同时装着其他点句高亮插件，建议先禁用，避免两层高亮叠在一起。
