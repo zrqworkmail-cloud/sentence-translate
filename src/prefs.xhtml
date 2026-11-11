@@ -1,0 +1,75 @@
+<vbox
+  id="sentence-translate-prefpane"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  xmlns:html="http://www.w3.org/1999/xhtml"
+>
+  <groupbox>
+    <label><html:h2>Sentence Translate</html:h2></label>
+    <description>点击 PDF 里的句子，高亮该句并在正下方显示中文译文；点下一句时上一句消失。</description>
+
+    <checkbox
+      id="sentence-translate-enabled"
+      native="true"
+      label="启用点句翻译"
+      preference="extensions.zotero.sentenceTranslate.enabled"
+    />
+
+    <hbox align="center">
+      <label value="高亮颜色" control="sentence-translate-color" />
+      <menulist
+        id="sentence-translate-color"
+        native="true"
+        preference="extensions.zotero.sentenceTranslate.color"
+      >
+        <menupopup>
+          <menuitem value="#ffd23f" label="黄" />
+          <menuitem value="#7ee787" label="绿" />
+          <menuitem value="#9ecbff" label="蓝" />
+          <menuitem value="#ffb3c1" label="粉" />
+        </menupopup>
+      </menulist>
+    </hbox>
+
+    <hbox align="center">
+      <label value="不透明度" control="sentence-translate-opacity" />
+      <scale
+        id="sentence-translate-opacity"
+        native="true"
+        min="5"
+        max="90"
+        preference="extensions.zotero.sentenceTranslate.opacity"
+      />
+    </hbox>
+
+    <hbox align="center">
+      <label value="译文目标语言" control="sentence-translate-lang" />
+      <menulist
+        id="sentence-translate-lang"
+        native="true"
+        preference="extensions.zotero.sentenceTranslate.targetLang"
+      >
+        <menupopup>
+          <menuitem value="zh-CN" label="简体中文" />
+          <menuitem value="zh-TW" label="繁體中文" />
+          <menuitem value="en" label="English" />
+          <menuitem value="ja" label="日本語" />
+        </menupopup>
+      </menulist>
+    </hbox>
+
+    <hbox align="center">
+      <label value="译文最多行数" control="sentence-translate-lines" />
+      <scale
+        id="sentence-translate-lines"
+        native="true"
+        min="1"
+        max="6"
+        preference="extensions.zotero.sentenceTranslate.maxLines"
+      />
+    </hbox>
+
+    <description class="sentence-translate-hint">
+      译文调用已安装的 Translate for Zotero，沿用其中配置的翻译引擎；未安装时只高亮、不显示译文。
+    </description>
+  </groupbox>
+</vbox>

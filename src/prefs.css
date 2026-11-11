@@ -1,0 +1,14 @@
+#sentence-translate-prefpane {
+	max-width: 42em;
+}
+
+#sentence-translate-prefpane description {
+	margin-bottom: 8px;
+}
+
+#sentence-translate-prefpane .sentence-translate-hint {
+	color: GrayText;
+	font-size: 0.95em;
+	line-height: 1.45;
+	margin-top: 10px;
+}
