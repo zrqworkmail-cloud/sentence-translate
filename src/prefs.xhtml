@@ -14,24 +14,32 @@
       preference="extensions.zotero.sentenceTranslate.enabled"
     />
 
-    <hbox align="center">
+    <label><html:h2>外观</html:h2></label>
+
+    <hbox align="center" class="sentence-translate-row">
       <label value="高亮颜色" control="sentence-translate-color" />
-      <menulist
+      <html:input
         id="sentence-translate-color"
-        native="true"
-        preference="extensions.zotero.sentenceTranslate.color"
-      >
-        <menupopup>
-          <menuitem value="#ffd23f" label="黄" />
-          <menuitem value="#7ee787" label="绿" />
-          <menuitem value="#9ecbff" label="蓝" />
-          <menuitem value="#ffb3c1" label="粉" />
-        </menupopup>
-      </menulist>
+        type="color"
+        class="sentence-translate-color"
+        aria-label="高亮颜色"
+      />
+      <html:span id="sentence-translate-color-value" class="sentence-translate-value">#ffd23f</html:span>
     </hbox>
 
-    <hbox align="center">
-      <label value="不透明度" control="sentence-translate-opacity" />
+    <hbox id="sentence-translate-color-presets" class="sentence-translate-swatches">
+      <html:button type="button" class="sentence-translate-swatch" data-color="#ffd23f" title="黄" style="background:#ffd23f"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#7ee787" title="绿" style="background:#7ee787"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#9ecbff" title="蓝" style="background:#9ecbff"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#ffb3c1" title="粉" style="background:#ffb3c1"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#ffab70" title="橙" style="background:#ffab70"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#d2a8ff" title="紫" style="background:#d2a8ff"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#ff7b72" title="红" style="background:#ff7b72"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#76e3d0" title="青" style="background:#76e3d0"></html:button>
+    </hbox>
+
+    <hbox align="center" class="sentence-translate-row">
+      <label value="高亮不透明度" control="sentence-translate-opacity" />
       <scale
         id="sentence-translate-opacity"
         native="true"
@@ -39,7 +47,46 @@
         max="90"
         preference="extensions.zotero.sentenceTranslate.opacity"
       />
+      <html:span class="sentence-translate-value">5–90%</html:span>
     </hbox>
+
+    <hbox align="center" class="sentence-translate-row">
+      <label value="译文背景色" control="sentence-translate-strip-color" />
+      <html:input
+        id="sentence-translate-strip-color"
+        type="color"
+        class="sentence-translate-color"
+        aria-label="译文背景色"
+      />
+      <html:span id="sentence-translate-strip-color-value" class="sentence-translate-value">#f2f2f2</html:span>
+    </hbox>
+
+    <hbox id="sentence-translate-strip-color-presets" class="sentence-translate-swatches">
+      <html:button type="button" class="sentence-translate-swatch" data-color="#f2f2f2" title="浅灰" style="background:#f2f2f2"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#ffffff" title="白" style="background:#ffffff"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#faf6ee" title="米色" style="background:#faf6ee"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#eef4fb" title="浅蓝" style="background:#eef4fb"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#eef7ee" title="浅绿" style="background:#eef7ee"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#f3eefb" title="浅紫" style="background:#f3eefb"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#3a3a3a" title="深灰" style="background:#3a3a3a"></html:button>
+      <html:button type="button" class="sentence-translate-swatch" data-color="#1f1f1f" title="黑" style="background:#1f1f1f"></html:button>
+    </hbox>
+
+    <hbox align="center" class="sentence-translate-row">
+      <label value="译文背景不透明度" control="sentence-translate-strip-opacity" />
+      <scale
+        id="sentence-translate-strip-opacity"
+        native="true"
+        min="0"
+        max="100"
+        preference="extensions.zotero.sentenceTranslate.stripOpacity"
+      />
+      <html:span class="sentence-translate-value">0–100%</html:span>
+    </hbox>
+
+    <description class="sentence-translate-hint">
+      译文背景默认浅灰 #f2f2f2、92% 不透明。点色块可快速选色，或点右侧取色器自定义任意颜色；选深色背景时会自动改用浅色文字。
+    </description>
 
     <hbox align="center">
       <label value="译文目标语言" control="sentence-translate-lang" />

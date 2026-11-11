@@ -15,6 +15,8 @@ const DEFAULTS = {
 	enabled: true,
 	color: "#ffd23f",
 	opacity: 38,
+	stripColor: "#f2f2f2",
+	stripOpacity: 92,
 	targetLang: "zh-CN",
 	maxLines: 3,
 };
@@ -64,6 +66,8 @@ function registerDefaults() {
 	branch.setBoolPref("enabled", DEFAULTS.enabled);
 	branch.setStringPref("color", DEFAULTS.color);
 	branch.setIntPref("opacity", DEFAULTS.opacity);
+	branch.setStringPref("stripColor", DEFAULTS.stripColor);
+	branch.setIntPref("stripOpacity", DEFAULTS.stripOpacity);
 	branch.setStringPref("targetLang", DEFAULTS.targetLang);
 	branch.setIntPref("maxLines", DEFAULTS.maxLines);
 }
@@ -88,6 +92,7 @@ function startup({ id, version, rootURI }) {
 		Zotero.PreferencePanes.register({
 			pluginID: id,
 			src: rootURI + "prefs.xhtml",
+			scripts: [rootURI + "prefs.js"],
 			label: "Sentence Translate",
 			image: rootURI + "icon.svg",
 			stylesheets: [rootURI + "prefs.css"],
@@ -452,6 +457,38 @@ function itemsFromChars(chars, viewBox, unit) {
 
 // --- painting --------------------------------------------------------------
 
+// Accept #rgb/#rrggbb only; a bad value in a preference must never produce an
+// invisible highlight or a stylesheet parse error.
+function hexColor(value, fallback) {
+	const text = String(value || "").trim();
+	if (/^#[0-9a-f]{6}$/i.test(text)) return text.toLowerCase();
+	if (/^#[0-9a-f]{3}$/i.test(text)) {
+		return "#" + text.slice(1).split("").map((c) => c + c).join("").toLowerCase();
+	}
+	return fallback;
+}
+
+function colorChannels(hex) {
+	return [
+		parseInt(hex.slice(1, 3), 16),
+		parseInt(hex.slice(3, 5), 16),
+		parseInt(hex.slice(5, 7), 16),
+	];
+}
+
+function colorWithAlpha(hex, percent) {
+	const [r, g, b] = colorChannels(hex);
+	const alpha = Math.min(1, Math.max(0, Number(percent) / 100));
+	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// Keep the translation readable when the reader picks a dark background.
+function readableText(hex) {
+	const [r, g, b] = colorChannels(hex);
+	const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+	return luminance > 0.55 ? "#1b1b1b" : "#f7f7f7";
+}
+
 function injectCSS(doc) {
 	if (doc.getElementById("sentence-translate-style")) return;
 	const style = doc.createElement("style");
@@ -464,13 +501,13 @@ function injectCSS(doc) {
   width: max-content; max-width: 100%;
   padding: .42em .6em; border-radius: 6px;
   border: 1px solid rgba(0,0,0,.12);
-  background: rgba(255,255,255,.96); color: #1b1b1b;
+  background: rgba(242,242,242,.96); color: var(--sft-fg, #1b1b1b);
   box-shadow: 0 2px 8px rgba(0,0,0,.18);
   font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
   line-height: 1.45; text-align: left; word-break: break-word; overflow: hidden;
   display: -webkit-box; -webkit-box-orient: vertical;
 }
-.sft-strip[data-state="error"] { color: #a33; }
+.sft-strip[data-state="error"] { color: var(--sft-error, #a33); }
 .sft-strip[data-state="loading"] { opacity: .7; font-style: italic; }
 `;
 	(doc.head || doc.documentElement).append(style);
@@ -480,8 +517,9 @@ function paintUnit(state, pageEl, unit, model) {
 	clearPaint(state);
 	const layer = state.doc.createElement("div");
 	layer.className = "sft-layer";
-	const color = String(pref("color") || DEFAULTS.color);
-	const opacity = Math.min(0.9, Math.max(0.05, (Number(pref("opacity")) || DEFAULTS.opacity) / 100));
+	const color = hexColor(pref("color"), DEFAULTS.color);
+	const rawOpacity = Number(pref("opacity"));
+	const opacity = Math.min(0.9, Math.max(0.05, (Number.isFinite(rawOpacity) ? rawOpacity : DEFAULTS.opacity) / 100));
 
 	for (const rect of unit.rects) {
 		const box = state.doc.createElement("div");
@@ -518,6 +556,14 @@ function makeStrip(state, pageEl, unit, model) {
 	strip.className = "sft-strip";
 	strip.dataset.state = "loading";
 	strip.textContent = "翻译中…";
+	const stripColor = hexColor(pref("stripColor"), DEFAULTS.stripColor);
+	const rawStripOpacity = Number(pref("stripOpacity"));
+	const stripOpacity = Math.min(100, Math.max(0, Number.isFinite(rawStripOpacity) ? rawStripOpacity : DEFAULTS.stripOpacity));
+	const foreground = readableText(stripColor);
+	strip.style.background = colorWithAlpha(stripColor, stripOpacity);
+	strip.style.setProperty("--sft-fg", foreground);
+	strip.style.setProperty("--sft-error", foreground === "#1b1b1b" ? "#a33" : "#ff9a9a");
+	strip.style.borderColor = foreground === "#1b1b1b" ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.22)";
 	strip.style.left = `${leftPct}%`;
 	strip.style.maxWidth = `calc(${Math.max(10, 100 - leftPct)}% - 6px)`;
 	strip.style.fontSize = `${fontSize.toFixed(1)}px`;
