@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Sentence Translate",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Click a sentence in a PDF to highlight it and show its Chinese translation directly underneath.",
   "homepage_url": "https://github.com/zrqworkmail-cloud/sentence-translate",
   "author": "Ruoquan Zhou",

@@ -21,7 +21,7 @@
 
 外观可调：高亮颜色与不透明度、译文背景色与背景不透明度、译文文字颜色都在设置页里修改。提供浅灰、纯白、深色、米色、浅蓝、高对比 6 套一键配色方案；默认译文背景为浅灰 `#e6e6e6`、95% 不透明，文字自动用深色；深色背景会自动改用浅色文字，也可取消“自动对比”指定任意文字颜色。
 
-实现：独立实现，不使用 Sentence Focus 或其他插件的代码。用 Zotero 10 的 `pdfDocument.getPageData({ pageIndex })` 取字符与 `viewBox`，把 PDF 左下原点坐标换算成左上原点并按页面百分比定位；按基线聚行、补回词间空格、识别双栏中缝、按句末标点切句；高亮矩形按字符比例切分，译文条用 `max-content` 随文字收缩。仓库包含 MIT LICENSE、README、`updates.json` 和可复现的 `build.ps1`，纯文本几何层有 Node 测试。
+实现：独立实现，不使用 Sentence Focus 或其他插件的代码。用 Zotero 10 的 `pdfDocument.getPageData({ pageIndex })` 取字符与 `viewBox`，把 PDF 左下原点坐标换算成左上原点并按页面百分比定位；按基线聚行、补回词间空格、识别双栏中缝、按句末标点切句；高亮矩形按字符比例切分，译文条按原句水平范围设置宽度，与原文句子同宽。仓库包含 MIT LICENSE、README、`updates.json` 和可复现的 `build.ps1`，纯文本几何层有 Node 测试。
 
 更新清单：https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest/download/updates.json
 

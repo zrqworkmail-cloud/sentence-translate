@@ -549,12 +549,17 @@ function makeStrip(state, pageEl, unit, model) {
 	const box = pageEl.getBoundingClientRect();
 	const displayHeight = box.height || pageEl.clientHeight || 1;
 	const left = Math.max(0, Math.min(...unit.rects.map((r) => r.x)));
+	const right = Math.max(...unit.rects.map((r) => r.x + r.w));
 	const top = Math.min(...unit.rects.map((r) => r.y));
 	const bottom = Math.max(...unit.rects.map((r) => r.y + r.h));
 	const lineHeight = TextLib.median(unit.rects.map((r) => r.h)) || 12;
 	const fontSize = Math.max(11, Math.min(20, (lineHeight / model.baseHeight * displayHeight) * 0.92));
 	const maxLines = Math.max(1, Math.min(6, Number(pref("maxLines")) || DEFAULTS.maxLines));
 	const leftPct = left / model.baseWidth * 100;
+	const widthPct = Math.min(
+		Math.max(1, 100 - leftPct),
+		Math.max(1, (right - left) / model.baseWidth * 100)
+	);
 	const topPct = top / model.baseHeight * 100;
 	const bottomPct = bottom / model.baseHeight * 100;
 
@@ -571,7 +576,8 @@ function makeStrip(state, pageEl, unit, model) {
 	strip.style.setProperty("--sft-error", isDarkColor(foreground) ? "#ff9a9a" : "#a33");
 	strip.style.borderColor = isDarkColor(foreground) ? "rgba(255,255,255,.22)" : "rgba(0,0,0,.12)";
 	strip.style.left = `${leftPct}%`;
-	strip.style.maxWidth = `calc(${Math.max(10, 100 - leftPct)}% - 6px)`;
+	strip.style.width = `${widthPct}%`;
+	strip.style.maxWidth = "100%";
 	strip.style.fontSize = `${fontSize.toFixed(1)}px`;
 	strip.style.setProperty("-webkit-line-clamp", String(maxLines));
 	strip.style.maxHeight = `${Math.round(fontSize * (1.45 * maxLines + 0.9))}px`;
