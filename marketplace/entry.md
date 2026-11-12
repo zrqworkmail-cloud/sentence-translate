@@ -11,15 +11,17 @@
 正文：
 
 ```markdown
-- 仓库：https://github.com/<owner>/sentence-translate
-- 最新 Release：https://github.com/<owner>/sentence-translate/releases/latest
-- 插件 ID：sentence-translate@<owner>.github.io
-- 支持版本：Zotero 7–11
+- 仓库：https://github.com/zrqworkmail-cloud/sentence-translate
+- 最新 Release：https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest
+- 插件 ID：sentence-translate@zrqworkmail-cloud.github.io
+- 支持版本：Zotero 7–11（`strict_min_version` 7.0，`strict_max_version` 11.*）
 - 许可证：MIT
 
-功能：在 Zotero PDF 阅读器里点击一个句子，按文字宽度高亮该句，并在句子正下方显示中文译文；点击下一句时上一句的高亮和译文一起消失。译文通过 Translate for Zotero 的公开 API 获取，复用其中已配置的翻译引擎；未安装时只高亮。
+功能：在 Zotero PDF 阅读器里点击一个句子，按文字宽度高亮该句，并在句子正下方显示中文译文；点击下一句时上一句的高亮和译文一起消失。译文通过 Translate for Zotero 的公开 API 获取，复用其中已配置的翻译引擎；未安装 TfZ 时只高亮，不报错。
 
-实现：独立实现，不使用 Sentence Focus 或其他插件的代码。使用 PDF.js 的 getTextContent() 取文字与坐标，按基线聚行、识别双栏中缝、按句末标点切句；高亮矩形按字符比例切分，译文条宽度随文字收缩。
+外观可调：高亮颜色与不透明度、译文背景色与背景不透明度都在设置页里修改；默认译文背景为浅灰 `#f2f2f2`、92% 不透明，高亮为 `#ffd23f`、38% 不透明。两处颜色都提供系统取色器和常用色块；深色背景会自动使用浅色文字。
 
-仓库已包含 MIT LICENSE、README、updates.json 与可复现的 build.ps1。
+实现：独立实现，不使用 Sentence Focus 或其他插件的代码。用 Zotero 10 的 `pdfDocument.getPageData({ pageIndex })` 取字符与 `viewBox`，把 PDF 左下原点坐标换算成左上原点并按页面百分比定位；按基线聚行、补回词间空格、识别双栏中缝、按句末标点切句；高亮矩形按字符比例切分，译文条用 `max-content` 随文字收缩。仓库包含 MIT LICENSE、README、`updates.json` 和可复现的 `build.ps1`，纯文本几何层有 Node 测试。
+
+更新清单：https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest/download/updates.json
 ```

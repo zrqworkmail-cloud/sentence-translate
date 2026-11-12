@@ -16,14 +16,22 @@ sentence-translate@<github-user>.github.io
 Change it in `src/manifest.json` only; `bootstrap.js` receives the id from
 Zotero at startup and passes it to Translate for Zotero.
 
-## 2. Point update_url at the repository
+## 2. Point update_url at the latest release manifest
 
 ```json
-"update_url": "https://raw.githubusercontent.com/<owner>/sentence-translate/main/updates.json"
+"update_url": "https://github.com/<owner>/sentence-translate/releases/latest/download/updates.json"
 ```
 
-The file has to be reachable without authentication. GitHub raw works; a Gitee
-raw URL works too, as long as it is public and stable.
+Do **not** put `@v0.2.1` or `@main` in `update_url`:
+
+- A versioned URL freezes the manifest at that version, so users on it can never
+  discover the next release.
+- A jsDelivr branch URL can keep serving a stale manifest for hours after a
+  release.
+
+The `latest/download/updates.json` URL always redirects to the manifest attached
+ to the newest non-prerelease release. The XPI linked from that manifest keeps a
+ versioned `releases/download/vX.Y.Z/...` address.
 
 ## 3. Build and tag
 
@@ -43,8 +51,8 @@ gh release create v0.1.0 build/sentence-translate-0.1.0.xpi `
     "sentence-translate@<github-user>.github.io": {
       "updates": [
         {
-          "version": "0.1.0",
-          "update_link": "https://github.com/<owner>/sentence-translate/releases/download/v0.1.0/sentence-translate-0.1.0.xpi",
+          "version": "0.2.1",
+          "update_link": "https://github.com/<owner>/sentence-translate/releases/download/v0.2.1/sentence-translate-0.2.1.xpi",
           "applications": {
             "zotero": {
               "strict_min_version": "7.0",
@@ -58,8 +66,18 @@ gh release create v0.1.0 build/sentence-translate-0.1.0.xpi `
 }
 ```
 
-Commit it as `updates.json` in the repository root. Add a new entry for every
-release; keep the old ones so users on older Zotero versions can still update.
+Commit it as `updates.json` in the repository root **and attach the same file to
+the release**:
+
+```powershell
+gh release create v0.2.1 build/sentence-translate-0.2.1.xpi updates.json `
+  --title "v0.2.1" --notes "..."
+```
+
+`releases/latest/download/updates.json` only works when `updates.json` is an
+asset of the latest release, not just a file on `main`. Add a new entry for
+every release; keep the old ones so users on older Zotero versions can still
+update.
 
 ## 5. Submit to the Zotero Chinese plugin catalog
 
