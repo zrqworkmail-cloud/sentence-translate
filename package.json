@@ -1,6 +1,6 @@
 {
   "name": "sentence-translate",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "description": "Click a sentence in a Zotero PDF to highlight it and show its translation underneath.",
   "scripts": {

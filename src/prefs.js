@@ -9,13 +9,13 @@
 	const PREFIX = "extensions.zotero.sentenceTranslate.";
 	const DEFAULTS = {
 		color: "#ffd23f",
-		stripColor: "#f2f2f2",
+		stripColor: "#e6e6e6",
 		textColor: "auto",
 	};
 	const THEMES = {
 		gray: {
 			color: "#ffd23f", opacity: 38,
-			stripColor: "#f2f2f2", stripOpacity: 92, textColor: "auto",
+			stripColor: "#e6e6e6", stripOpacity: 95, textColor: "auto",
 		},
 		white: {
 			color: "#ffd23f", opacity: 38,
