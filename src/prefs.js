@@ -169,12 +169,16 @@
 		renderTextColor(startAuto, isHex(saved) ? saved : "#1b1b1b");
 
 		if (auto) {
-			auto.addEventListener("change", () => {
-				const isAuto = auto.checked;
+			const syncAuto = () => {
+				const isAuto = !!auto.checked;
 				const color = isHex(input && input.value) ? input.value : "#1b1b1b";
 				set("textColor", isAuto ? "auto" : color);
 				renderTextColor(isAuto, color);
-			});
+			};
+			// XUL checkboxes send `command`; HTML-style `change` is kept for
+			// builds that forward it too. Both paths write the same value.
+			auto.addEventListener("command", syncAuto);
+			auto.addEventListener("change", syncAuto);
 		}
 		if (input) {
 			input.addEventListener("input", () => {

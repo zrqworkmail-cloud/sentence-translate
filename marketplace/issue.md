@@ -11,4 +11,4 @@
 
 实现：独立实现，不使用 Sentence Focus 或其他插件的代码。用 Zotero 10 的 `pdfDocument.getPageData({ pageIndex })` 取字符与 `viewBox`，把 PDF 左下原点坐标换算成左上原点并按页面百分比定位；按基线聚行、补回词间空格、识别双栏中缝、按句末标点切句；高亮矩形按字符比例切分，译文条用 `max-content` 随文字收缩。仓库包含 MIT LICENSE、README、`updates.json` 和可复现的 `build.ps1`，纯文本几何层有 Node 测试。
 
-当前版本：0.2.2。更新清单改为随 Release 发布的 `latest/download/updates.json`，不再依赖 jsDelivr 分支缓存；从 0.2.1 起可正常收到后续版本。
+当前版本：0.2.3。修复“自动对比”复选框在 Zotero 设置页不写入偏好的问题；更新清单使用随 Release 发布的 `latest/download/updates.json`，不再依赖 jsDelivr 分支缓存。
