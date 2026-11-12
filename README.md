@@ -2,7 +2,7 @@
 
 在 Zotero 的 PDF 阅读器里点一个句子，就给该句加上按文字宽度的高亮，并在句子正下方显示中文译文；点下一句时，上一句的高亮和译文一起消失。
 
-这是一个独立实现，不复用 Sentence Focus 的代码。句子切分、坐标换算、命中测试和高亮绘制都在本仓库内完成；翻译交给已安装的 **Translate for Zotero**。
+这是一个独立实现，不复用 Sentence Focus 的代码。句子切分、坐标换算、命中测试和高亮绘制都在本仓库内完成；翻译交给 **Translate for Zotero**（需另行安装）。
 
 ![真实 Zotero 截图：点击句子后，句下显示中文译文](docs/effect.png)
 
@@ -11,7 +11,7 @@
 ## 依赖
 
 - Zotero 7 及以上（在 Zotero 10.0.8 上开发与验证）
-- **Translate for Zotero**（可选）：安装后译文才会出现；未安装时只高亮
+- **Translate for Zotero（实际需要安装）**：译文通过其公开 API 获取；安装后还需在 TfZ 中配置翻译引擎。未安装时仍会高亮，句下提示“未检测到 Translate for Zotero”，不会出现译文。
 
 ## 安装
 

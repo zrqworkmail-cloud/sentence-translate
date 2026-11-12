@@ -5,7 +5,7 @@
 - 许可证：MIT
 - 更新清单：https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest/download/updates.json
 
-功能：在 Zotero PDF 阅读器里点击一个句子，按文字宽度高亮该句，并在句子正下方显示中文译文；点击下一句时上一句的高亮和译文一起消失。译文通过 Translate for Zotero 的公开 API 获取，复用其中已配置的翻译引擎；未安装 TfZ 时只高亮，不报错。
+功能：在 Zotero PDF 阅读器里点击一个句子，按文字宽度高亮该句，并在句子正下方显示中文译文；点击下一句时上一句的高亮和译文一起消失。实际需要安装 Translate for Zotero：译文通过其公开 API 获取，复用其中已配置的翻译引擎；未安装时仍会高亮，句下提示“未检测到 Translate for Zotero”，不会出现译文。
 
 外观可调：高亮颜色与不透明度、译文背景色与背景不透明度、译文文字颜色都在设置页里修改。提供浅灰、纯白、深色、米色、浅蓝、高对比 6 套一键配色方案；默认译文背景为浅灰 `#e6e6e6`、95% 不透明，文字自动用深色；深色背景会自动改用浅色文字，也可取消“自动对比”指定任意文字颜色。
 
