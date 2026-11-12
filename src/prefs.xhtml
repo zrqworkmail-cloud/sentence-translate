@@ -17,6 +17,22 @@
     <label><html:h2>外观</html:h2></label>
 
     <hbox align="center" class="sentence-translate-row">
+      <label value="配色方案" />
+      <hbox id="sentence-translate-themes" class="sentence-translate-themes">
+        <html:button type="button" class="sentence-translate-theme" data-theme="gray">浅灰</html:button>
+        <html:button type="button" class="sentence-translate-theme" data-theme="white">纯白</html:button>
+        <html:button type="button" class="sentence-translate-theme" data-theme="dark">深色</html:button>
+        <html:button type="button" class="sentence-translate-theme" data-theme="sepia">米色</html:button>
+        <html:button type="button" class="sentence-translate-theme" data-theme="blue">浅蓝</html:button>
+        <html:button type="button" class="sentence-translate-theme" data-theme="contrast">高对比</html:button>
+      </hbox>
+    </hbox>
+
+    <description class="sentence-translate-hint">
+      配色方案会一次性套用高亮、译文背景和文字颜色；套用后仍可单独微调。
+    </description>
+
+    <hbox align="center" class="sentence-translate-row">
       <label value="高亮颜色" control="sentence-translate-color" />
       <html:input
         id="sentence-translate-color"
@@ -84,8 +100,24 @@
       <html:span class="sentence-translate-value">0–100%</html:span>
     </hbox>
 
+    <hbox align="center" class="sentence-translate-row">
+      <label value="译文文字颜色" control="sentence-translate-text-color" />
+      <html:input
+        id="sentence-translate-text-color"
+        type="color"
+        class="sentence-translate-color"
+        aria-label="译文文字颜色"
+      />
+      <html:span id="sentence-translate-text-color-value" class="sentence-translate-value">自动</html:span>
+      <checkbox
+        id="sentence-translate-text-auto"
+        native="true"
+        label="自动对比"
+      />
+    </hbox>
+
     <description class="sentence-translate-hint">
-      译文背景默认浅灰 #f2f2f2、92% 不透明。点色块可快速选色，或点右侧取色器自定义任意颜色；选深色背景时会自动改用浅色文字。
+      默认译文背景浅灰 #f2f2f2、92% 不透明，文字自动用深色；深色背景自动改用浅色文字。取消“自动对比”后可指定任意文字颜色。
     </description>
 
     <hbox align="center">

@@ -17,6 +17,7 @@ const DEFAULTS = {
 	opacity: 38,
 	stripColor: "#f2f2f2",
 	stripOpacity: 92,
+	textColor: "auto",
 	targetLang: "zh-CN",
 	maxLines: 3,
 };
@@ -68,6 +69,7 @@ function registerDefaults() {
 	branch.setIntPref("opacity", DEFAULTS.opacity);
 	branch.setStringPref("stripColor", DEFAULTS.stripColor);
 	branch.setIntPref("stripOpacity", DEFAULTS.stripOpacity);
+	branch.setStringPref("textColor", DEFAULTS.textColor);
 	branch.setStringPref("targetLang", DEFAULTS.targetLang);
 	branch.setIntPref("maxLines", DEFAULTS.maxLines);
 }
@@ -483,10 +485,14 @@ function colorWithAlpha(hex, percent) {
 }
 
 // Keep the translation readable when the reader picks a dark background.
-function readableText(hex) {
+function isDarkColor(hex) {
 	const [r, g, b] = colorChannels(hex);
 	const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-	return luminance > 0.55 ? "#1b1b1b" : "#f7f7f7";
+	return luminance <= 0.55;
+}
+
+function readableText(hex) {
+	return isDarkColor(hex) ? "#f7f7f7" : "#1b1b1b";
 }
 
 function injectCSS(doc) {
@@ -559,11 +565,11 @@ function makeStrip(state, pageEl, unit, model) {
 	const stripColor = hexColor(pref("stripColor"), DEFAULTS.stripColor);
 	const rawStripOpacity = Number(pref("stripOpacity"));
 	const stripOpacity = Math.min(100, Math.max(0, Number.isFinite(rawStripOpacity) ? rawStripOpacity : DEFAULTS.stripOpacity));
-	const foreground = readableText(stripColor);
+	const foreground = hexColor(pref("textColor"), readableText(stripColor));
 	strip.style.background = colorWithAlpha(stripColor, stripOpacity);
 	strip.style.setProperty("--sft-fg", foreground);
-	strip.style.setProperty("--sft-error", foreground === "#1b1b1b" ? "#a33" : "#ff9a9a");
-	strip.style.borderColor = foreground === "#1b1b1b" ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.22)";
+	strip.style.setProperty("--sft-error", isDarkColor(foreground) ? "#ff9a9a" : "#a33");
+	strip.style.borderColor = isDarkColor(foreground) ? "rgba(255,255,255,.22)" : "rgba(0,0,0,.12)";
 	strip.style.left = `${leftPct}%`;
 	strip.style.maxWidth = `calc(${Math.max(10, 100 - leftPct)}% - 6px)`;
 	strip.style.fontSize = `${fontSize.toFixed(1)}px`;
