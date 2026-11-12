@@ -24,4 +24,6 @@
 实现：独立实现，不使用 Sentence Focus 或其他插件的代码。用 Zotero 10 的 `pdfDocument.getPageData({ pageIndex })` 取字符与 `viewBox`，把 PDF 左下原点坐标换算成左上原点并按页面百分比定位；按基线聚行、补回词间空格、识别双栏中缝、按句末标点切句；高亮矩形按字符比例切分，译文条用 `max-content` 随文字收缩。仓库包含 MIT LICENSE、README、`updates.json` 和可复现的 `build.ps1`，纯文本几何层有 Node 测试。
 
 更新清单：https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest/download/updates.json
+
+自动更新实测：已在干净配置实测 0.2.3 自动升级到 0.2.4，`latest/download/updates.json` 返回 0.2.4。
 ```
