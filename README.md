@@ -11,7 +11,7 @@
 ## 依赖
 
 - Zotero 10（仅在 Zotero 10.0.8 上开发与验证；7–9 与 11 未测试，故未声明支持）
-- 不需要其他 Zotero 插件。默认走免密钥的 Google 翻译接口，失败时自动回退到 MyMemory；也可以填 DeepL 或任意 OpenAI 兼容大模型的 key。
+- 不需要其他 Zotero 插件。翻译引擎内置，默认链路是 **大模型 → DeepL → Google → MyMemory**（大模型和 DeepL 只在填了对应 key 时参与），全部失败时才回退到已安装的 Translate for Zotero。
 - 可选：如果本机已装 Translate for Zotero，可在引擎里显式选它，沿用其中配置的翻译服务；不装也不影响使用。
 
 ## 安装
@@ -50,12 +50,16 @@
 | 译文文字颜色 | 系统取色器 + 常用色块；默认“自动对比”，可手动指定 |
 | 译文目标语言 | 默认简体中文 |
 | 译文最多行数 | 1–6，默认 3 |
-| 翻译引擎 | 自动 / Google / MyMemory / DeepL / 大模型 / Translate for Zotero，默认“自动” |
+| 翻译引擎 | 自动 / 大模型 / DeepL / Google / MyMemory / Translate for Zotero，默认“自动” |
 | DeepL API key | 可选，`…:fx` 结尾的 key 走免费端点 |
 | 大模型接口地址 / 模型 / key | 可选，OpenAI 兼容的 `/chat/completions`，如 DeepSeek、通义千问、Ollama |
 | 测试翻译 | 用固定例句实测当前引擎，直接显示引擎名和译文 |
 
-引擎选择：“自动”会优先用填了 key 的大模型或 DeepL，否则依次尝试 Google、MyMemory，全部失败时才用已安装的 Translate for Zotero。key 以明文保存在 Zotero 首选项里，公用电脑上不要填。
+引擎选择：“自动”按 **大模型 → DeepL → Google → MyMemory** 的顺序尝试，大模型和 DeepL 只在填了对应 key 时参与；全部失败后才用已安装的 Translate for Zotero。也可以手动锁定某一个引擎。
+
+Google 引擎优先走 `clients5.google.com` 的扩展端点（共享代理出口下比 `translate_a/single` 的 gtx 接口更不容易被 429 限流），失败时再试 gtx 端点。
+
+所有请求都经 Zotero 的 HTTP 栈发出，**跟随系统代理设置**；每个请求带硬超时（默认 12 秒，到时最多再等 2 秒），网络被墙或代理失效时会自动切到下一个引擎，不会一直转圈。key 以明文保存在 Zotero 首选项里，公用电脑上不要填。
 
 配色方案会同时设置高亮色、高亮不透明度、译文背景色/不透明度和文字颜色；套用后仍可逐项微调。默认“浅灰”为 `#e6e6e6` / 95% / 自动文字；深色背景会自动改用浅色文字，也可以取消“自动对比”指定任意文字颜色。
 
@@ -84,7 +88,7 @@ node test/live-providers.js    # 真实接口联调（需联网，可加 HTTPS_P
 - 句子切分是启发式的：参考文献条目、公式行和极端排版可能需要手动调整。
 - 旋转页面、扫描件（无文字层）不保证可用。
 - 译文是页面浮层，不写入 Zotero 注释。
-- 免密钥的 Google 接口和 MyMemory 都是公开服务，可能限流或随时变更；对稳定性有要求时建议填自己的 DeepL 或大模型 key。
+- 免密钥的 Google 接口和 MyMemory 都是公开服务，可能限流或随时变更（共享代理出口更容易触发 Google 429）；对稳定性有要求时建议填自己的 DeepL 或大模型 key。
 
 ## 许可证
 
