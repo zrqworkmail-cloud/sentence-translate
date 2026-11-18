@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Sentence Translate",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Click a sentence in a PDF to highlight it and show its Chinese translation directly underneath.",
   "homepage_url": "https://github.com/zrqworkmail-cloud/sentence-translate",
   "author": "Ruoquan Zhou",
@@ -13,8 +13,8 @@
     "zotero": {
       "id": "sentence-translate@zrqworkmail-cloud.github.io",
       "update_url": "https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest/download/updates.json",
-      "strict_min_version": "7.0",
-      "strict_max_version": "11.*"
+      "strict_min_version": "10.0",
+      "strict_max_version": "10.*"
     }
   }
 }

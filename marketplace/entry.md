@@ -14,7 +14,7 @@
 - 仓库：https://github.com/zrqworkmail-cloud/sentence-translate
 - 最新 Release：https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest
 - 插件 ID：sentence-translate@zrqworkmail-cloud.github.io
-- 支持版本：Zotero 7–11（`strict_min_version` 7.0，`strict_max_version` 11.*）
+- 支持版本：Zotero 10（`strict_min_version` 10.0，`strict_max_version` 10.*；仅在 Zotero 10.0.8 上验证）
 - 许可证：MIT
 
 功能：在 Zotero PDF 阅读器里点击一个句子，按文字宽度高亮该句，并在句子正下方显示中文译文；点击下一句时上一句的高亮和译文一起消失。实际需要安装 Translate for Zotero：译文通过其公开 API 获取，复用其中已配置的翻译引擎；未安装时仍会高亮，句下提示“未检测到 Translate for Zotero”，不会出现译文。

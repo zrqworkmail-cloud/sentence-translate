@@ -10,7 +10,7 @@
 
 ## 依赖
 
-- Zotero 7 及以上（在 Zotero 10.0.8 上开发与验证）
+- Zotero 10（仅在 Zotero 10.0.8 上开发与验证；7–9 与 11 未测试，故未声明支持）
 - **Translate for Zotero（实际需要安装）**：译文通过其公开 API 获取；安装后还需在 TfZ 中配置翻译引擎。未安装时仍会高亮，句下提示“未检测到 Translate for Zotero”，不会出现译文。
 
 ## 安装

@@ -55,8 +55,8 @@ gh release create v0.1.0 build/sentence-translate-0.1.0.xpi `
           "update_link": "https://github.com/<owner>/sentence-translate/releases/download/v0.2.1/sentence-translate-0.2.1.xpi",
           "applications": {
             "zotero": {
-              "strict_min_version": "7.0",
-              "strict_max_version": "11.*"
+              "strict_min_version": "10.0",
+              "strict_max_version": "10.*"
             }
           }
         }
