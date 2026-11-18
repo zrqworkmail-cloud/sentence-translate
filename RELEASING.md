@@ -110,3 +110,29 @@ Optional metadata used by the catalog: `nameZh`, `summaryZh`, `keywords`.
 - [ ] A real PDF click shows a text-width highlight and a translation
 - [ ] LICENSE and README are in the repository
 - [ ] Release asset name matches `update_link`
+
+## Release note draft — v0.3.1
+
+Draft kept here as a memo after the 0.3.1 publication; take what is needed
+when posting a release or replying in the catalog PR.
+
+**面向用户**
+
+- 新增「显示译文」开关：关掉后点句仍高亮句子，但不创建译文条、不发起翻译请求；原「启用点句翻译」仍是总开关。
+- 翻译仍由插件自带（大模型 → DeepL → Google → MyMemory），不装 Translate for Zotero 也能用。
+
+**更新链路（本轮实测）**
+
+- 自动：干净配置装 0.2.3，启动后自动升到 0.2.4。
+- 手动：干净配置装 0.3.0，工具 → 插件 → 齿轮 → Check for Updates 识别出 1 个可用更新，装成 0.3.1；详情页显示 Version 0.3.1，磁盘上的 xpi 与发布包逐字节一致（24,177 字节，SHA256 相同）。
+- `releases/latest/download/updates.json` 当前返回 0.3.1。
+
+**投稿与文档**
+
+- PR #324 已合并（2026-11-18T04:06:47Z），正文补了一条“更新链路已在干净配置实测”的 checklist。
+- README「更新」节、`marketplace/entry.md`、`marketplace/pr-body.md` 均已写明自动与手动两条路径。
+
+**收尾**
+
+- 删除本项目遗留的临时 Zotero profile 副本与脚手架（`_st_test_210949`、`_st_load_*`、`_zotero_smoke_*`、`_zotero_unpacked*`、`_st_update_clean`、`st-driver` 等），回收约 655 MB。
+- 仓库工作区干净，`main` 与 `origin/main` 同点（45be1b2）。
