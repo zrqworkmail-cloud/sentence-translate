@@ -3,6 +3,16 @@
     "sentence-translate@zrqworkmail-cloud.github.io": {
       "updates": [
         {
+          "version": "0.3.0",
+          "update_link": "https://github.com/zrqworkmail-cloud/sentence-translate/releases/download/v0.3.0/sentence-translate-0.3.0.xpi",
+          "applications": {
+            "zotero": {
+              "strict_min_version": "10.0",
+              "strict_max_version": "10.*"
+            }
+          }
+        },
+        {
           "version": "0.2.6",
           "update_link": "https://github.com/zrqworkmail-cloud/sentence-translate/releases/download/v0.2.6/sentence-translate-0.2.6.xpi",
           "applications": {

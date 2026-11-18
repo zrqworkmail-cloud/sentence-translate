@@ -14,7 +14,7 @@ sentence-translate@<github-user>.github.io
 ```
 
 Change it in `src/manifest.json` only; `bootstrap.js` receives the id from
-Zotero at startup and passes it to Translate for Zotero.
+Zotero at startup and passes it to the translation layer as the request source.
 
 ## 2. Point update_url at the latest release manifest
 

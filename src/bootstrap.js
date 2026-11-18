@@ -3,7 +3,9 @@
  *
  * Click a sentence in a PDF: the sentence is tinted and its Chinese
  * translation appears directly underneath. Clicking another sentence moves
- * both. Translation is delegated to Translate for Zotero when it is installed.
+ * both. The plugin carries its own translation channels (Google, MyMemory,
+ * optional DeepL or an OpenAI-compatible model), so it works on its own;
+ * Translate for Zotero is used only if the user selects it explicitly.
  *
  * Independent implementation; no code from other Zotero plugins.
  */
@@ -20,11 +22,17 @@ const DEFAULTS = {
 	textColor: "auto",
 	targetLang: "zh-CN",
 	maxLines: 3,
+	provider: "auto",
+	deeplKey: "",
+	llmBaseUrl: "",
+	llmModel: "",
+	llmKey: "",
 };
 
 let addonID = "";
 let rootDir = "";
 let TextLib = null;
+let TransLib = null;
 let started = false;
 
 const readerStates = new Map();
@@ -72,6 +80,11 @@ function registerDefaults() {
 	branch.setStringPref("textColor", DEFAULTS.textColor);
 	branch.setStringPref("targetLang", DEFAULTS.targetLang);
 	branch.setIntPref("maxLines", DEFAULTS.maxLines);
+	branch.setStringPref("provider", DEFAULTS.provider);
+	branch.setStringPref("deeplKey", DEFAULTS.deeplKey);
+	branch.setStringPref("llmBaseUrl", DEFAULTS.llmBaseUrl);
+	branch.setStringPref("llmModel", DEFAULTS.llmModel);
+	branch.setStringPref("llmKey", DEFAULTS.llmKey);
 }
 
 // --- lifecycle -------------------------------------------------------------
@@ -90,11 +103,18 @@ function startup({ id, version, rootURI }) {
 		throw new Error("Sentence Translate: text library failed to load");
 	}
 
+	Services.scriptloader.loadSubScript(rootURI + "lib/translation.js", globalThis);
+	TransLib = globalThis.SentenceTranslation;
+	if (!TransLib || typeof TransLib.translate !== "function") {
+		throw new Error("Sentence Translate: translation library failed to load");
+	}
+	exposeTestHook();
+
 	try {
 		Zotero.PreferencePanes.register({
 			pluginID: id,
 			src: rootURI + "prefs.xhtml",
-			scripts: [rootURI + "prefs.js"],
+			scripts: [rootURI + "prefs-pane.js"],
 			label: "Sentence Translate",
 			image: rootURI + "icon.svg",
 			stylesheets: [rootURI + "prefs.css"],
@@ -139,6 +159,8 @@ function shutdown() {
 	}
 	readerStates.clear();
 	translationCache.clear();
+	try { delete Zotero.SentenceTranslate; }
+	catch (e) { /* nothing to remove */ }
 
 	try {
 		Zotero.PreferencePanes.unregister(addonID);
@@ -629,6 +651,97 @@ function renderStrip(strip, text, isError) {
 	if (!strip || !strip.isConnected) return;
 	strip.textContent = text;
 	strip.dataset.state = isError ? "error" : "done";
+	if (!isError) strip.removeAttribute("title");
+}
+
+// The engine and the target language are part of the key: switching either
+// must not return a translation produced by the previous setting.
+function cacheKey(text) {
+	return String(pref("provider") || DEFAULTS.provider) + "|"
+		+ String(pref("targetLang") || DEFAULTS.targetLang) + "|" + text;
+}
+
+// Zotero's XHR is privileged, so no CORS setup is needed. Non-2xx responses
+// are reported instead of thrown so the provider layer can describe them.
+async function httpRequest(method, url, options) {
+	const opts = options || {};
+	const timeout = Math.max(3000, Number(opts.timeout) || 12000);
+	// Zotero's own timeout only starts counting once the socket is open, so a
+	// blackholed connection (blocked DNS, dead proxy) hangs forever. Race the
+	// request so a stuck provider always releases the caller to the next one.
+	const pending = Zotero.HTTP.request(method, url, {
+		body: opts.body,
+		headers: opts.headers,
+		responseType: "text",
+		timeout,
+		followRedirects: true,
+	});
+	pending.catch(() => {});
+	try {
+		const xhr = await Promise.race([
+			pending,
+			new Promise((resolve, reject) => {
+				setTimeout(() => {
+					const error = new Error("请求超时（" + Math.round((timeout + 2000) / 1000) + " 秒）");
+					error.transport = true;
+					reject(error);
+				}, timeout + 2000);
+			}),
+		]);
+		return { status: xhr.status || 200, text: xhr.responseText || "" };
+	}
+	catch (e) {
+		const xhr = e && e.xmlhttp;
+		if (xhr && xhr.status) return { status: xhr.status, text: xhr.responseText || "" };
+		const error = new Error((e && e.message) || "网络请求失败");
+		error.transport = true;
+		throw error;
+	}
+}
+
+function translationOptions() {
+	return {
+		provider: String(pref("provider") || DEFAULTS.provider),
+		targetLang: String(pref("targetLang") || DEFAULTS.targetLang),
+		deeplKey: String(pref("deeplKey") || ""),
+		llmBaseUrl: String(pref("llmBaseUrl") || ""),
+		llmModel: String(pref("llmModel") || ""),
+		llmKey: String(pref("llmKey") || ""),
+		request: httpRequest,
+		custom: pdfTranslateProvider(),
+	};
+}
+
+// Optional: honour the user's existing Translate for Zotero setup, but never
+// require it. Only offered as an explicit engine or the last automatic step.
+function pdfTranslateProvider() {
+	const api = Zotero.PDFTranslate && Zotero.PDFTranslate.api;
+	if (!api || typeof api.translate !== "function") return {};
+	return {
+		zotero: async (text, targetLang) => {
+			const task = await api.translate(text, {
+				pluginID: addonID,
+				langto: String(targetLang || DEFAULTS.targetLang),
+			});
+			const result = task && typeof task.result === "string" ? task.result.trim() : "";
+			if (!result) throw new Error("Translate for Zotero 返回空译文");
+			return result;
+		},
+	};
+}
+
+// The preference pane runs in its own window, so the test button talks to the
+// plugin through one small function instead of duplicating provider code.
+function exposeTestHook() {
+	try {
+		Zotero.SentenceTranslate = {
+			translate: (text) => TransLib.translate(text, translationOptions()),
+			providers: () => TransLib.providerChain(translationOptions()),
+		};
+	}
+	catch (e) {
+		diag("cannot expose test hook " + e);
+	}
 }
 
 async function translateUnit(state, unit, strip, seq) {
@@ -638,46 +751,27 @@ async function translateUnit(state, unit, strip, seq) {
 		return;
 	}
 
-	const cached = cacheGet(text);
+	const key = cacheKey(text);
+	const cached = cacheGet(key);
 	if (cached) {
 		renderStrip(strip, cached, false);
 		return;
 	}
 
-	const api = Zotero.PDFTranslate && Zotero.PDFTranslate.api;
-	if (!api || typeof api.translate !== "function") {
-		diag(`no TfZ api; keys=${Zotero.PDFTranslate ? Object.keys(Zotero.PDFTranslate).join(",") : "none"}`);
-		renderStrip(strip, "未检测到 Translate for Zotero", true);
-		return;
-	}
-
-	let timer = 0;
 	try {
-		const timeout = new Promise((resolve, reject) => {
-			timer = setTimeout(() => reject(new Error("timeout")), 15000);
-		});
-		const task = await Promise.race([
-			api.translate(text, {
-				pluginID: addonID,
-				langto: String(pref("targetLang") || DEFAULTS.targetLang),
-			}),
-			timeout,
-		]);
-		if (timer) clearTimeout(timer);
+		const result = await TransLib.translate(text, translationOptions());
 		if (seq !== state.seq || !strip.isConnected) return;
-
-		const result = task && typeof task.result === "string" ? task.result.trim() : "";
-		if (!result) throw new Error("empty translation");
-		cachePut(text, result);
-		renderStrip(strip, result, false);
-		diag(`translated chars=${result.length}`);
+		cachePut(key, result.text);
+		renderStrip(strip, result.text, false);
+		diag(`translated provider=${result.provider} chars=${result.text.length}`);
 	}
 	catch (e) {
-		if (timer) clearTimeout(timer);
+		const message = (e && e.message) || String(e);
 		if (seq === state.seq && strip.isConnected) {
-			renderStrip(strip, "译文获取失败", true);
+			renderStrip(strip, "翻译失败", true);
+			strip.title = message;
 		}
-		Zotero.debug("Sentence Translate: translation failed - " + ((e && e.message) || e));
-		diag(`translation failed ${(e && e.message) || e}`);
+		Zotero.debug("Sentence Translate: translation failed - " + message);
+		diag(`translation failed ${message}`);
 	}
 }

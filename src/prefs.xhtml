@@ -148,7 +148,85 @@
     </hbox>
 
     <description class="sentence-translate-hint">
-      译文调用已安装的 Translate for Zotero，沿用其中配置的翻译引擎；未安装时只高亮、不显示译文。
+      译文最多显示这么多行，超出部分自动截断。
     </description>
+
+    <label><html:h2>翻译引擎</html:h2></label>
+
+    <hbox align="center" class="sentence-translate-row">
+      <label value="引擎" control="sentence-translate-provider" />
+      <menulist
+        id="sentence-translate-provider"
+        native="true"
+        preference="extensions.zotero.sentenceTranslate.provider"
+      >
+        <menupopup>
+          <menuitem value="auto" label="自动（推荐）" />
+          <menuitem value="google" label="Google 翻译（免密钥）" />
+          <menuitem value="mymemory" label="MyMemory（免密钥）" />
+          <menuitem value="deepl" label="DeepL（需 API key）" />
+          <menuitem value="llm" label="大模型（OpenAI 兼容）" />
+          <menuitem value="zotero" label="Translate for Zotero（若已安装）" />
+        </menupopup>
+      </menulist>
+    </hbox>
+
+    <description class="sentence-translate-hint">
+      本插件自带翻译，装它一个就够了，不需要再装其他翻译插件。“自动”会优先用你填了 key 的大模型或 DeepL，
+      否则依次尝试 Google、MyMemory；全部失败时才使用已安装的 Translate for Zotero。
+    </description>
+
+    <hbox align="center" class="sentence-translate-row">
+      <label value="DeepL API key" control="sentence-translate-deepl-key" />
+      <html:input
+        id="sentence-translate-deepl-key"
+        type="password"
+        class="sentence-translate-text"
+        placeholder="以 :fx 结尾的是免费版 key"
+        aria-label="DeepL API key"
+      />
+    </hbox>
+
+    <hbox align="center" class="sentence-translate-row">
+      <label value="大模型接口地址" control="sentence-translate-llm-base" />
+      <html:input
+        id="sentence-translate-llm-base"
+        type="text"
+        class="sentence-translate-text"
+        placeholder="https://api.deepseek.com/v1"
+        aria-label="大模型接口地址"
+      />
+    </hbox>
+
+    <hbox align="center" class="sentence-translate-row">
+      <label value="模型名称" control="sentence-translate-llm-model" />
+      <html:input
+        id="sentence-translate-llm-model"
+        type="text"
+        class="sentence-translate-text"
+        placeholder="deepseek-chat"
+        aria-label="模型名称"
+      />
+    </hbox>
+
+    <hbox align="center" class="sentence-translate-row">
+      <label value="大模型 API key" control="sentence-translate-llm-key" />
+      <html:input
+        id="sentence-translate-llm-key"
+        type="password"
+        class="sentence-translate-text"
+        aria-label="大模型 API key"
+      />
+    </hbox>
+
+    <description class="sentence-translate-hint">
+      接口需兼容 OpenAI 的 /chat/completions，例如 DeepSeek、通义千问、智谱或本地 Ollama。
+      key 以明文保存在 Zotero 首选项文件里，公用电脑上请勿填写。
+    </description>
+
+    <hbox align="center" class="sentence-translate-row">
+      <html:button id="sentence-translate-test" type="button">测试翻译</html:button>
+      <html:span id="sentence-translate-test-result" class="sentence-translate-test-result"></html:span>
+    </hbox>
   </groupbox>
 </vbox>

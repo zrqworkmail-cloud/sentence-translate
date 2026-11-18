@@ -11,7 +11,17 @@
 		color: "#ffd23f",
 		stripColor: "#e6e6e6",
 		textColor: "auto",
+		deeplKey: "",
+		llmBaseUrl: "",
+		llmModel: "",
+		llmKey: "",
 	};
+	const TEXT_PREFS = [
+		["sentence-translate-deepl-key", "deeplKey"],
+		["sentence-translate-llm-base", "llmBaseUrl"],
+		["sentence-translate-llm-model", "llmModel"],
+		["sentence-translate-llm-key", "llmKey"],
+	];
 	const THEMES = {
 		gray: {
 			color: "#ffd23f", opacity: 38,
@@ -145,6 +155,50 @@
 		}
 	}
 
+	// Text inputs are plain HTML, so they are bound here rather than through
+	// the XUL `preference` attribute.
+	function bindTextPrefs() {
+		for (const [id, key] of TEXT_PREFS) {
+			const input = $(id);
+			if (!input) continue;
+			input.value = get(key);
+			const save = () => set(key, input.value);
+			input.addEventListener("input", save);
+			input.addEventListener("change", save);
+		}
+	}
+
+	function showTestResult(text, state) {
+		const out = $("sentence-translate-test-result");
+		if (!out) return;
+		out.textContent = text;
+		out.dataset.state = state || "";
+	}
+
+	function bindTestButton() {
+		const button = $("sentence-translate-test");
+		if (!button) return;
+		button.addEventListener("click", async () => {
+			const api = Zotero.SentenceTranslate;
+			if (!api || typeof api.translate !== "function") {
+				showTestResult("插件未加载，请重启 Zotero", "error");
+				return;
+			}
+			button.disabled = true;
+			showTestResult("测试中…", "");
+			try {
+				const result = await api.translate("The quick brown fox jumps over the lazy dog.");
+				showTestResult(`${result.provider}：${result.text}`, "ok");
+			}
+			catch (e) {
+				showTestResult("失败：" + ((e && e.message) || e), "error");
+			}
+			finally {
+				button.disabled = false;
+			}
+		});
+	}
+
 	function init() {
 		if (initialized) return;
 		initialized = true;
@@ -195,6 +249,9 @@
 				if (button) applyTheme(button.dataset.theme);
 			});
 		}
+
+		bindTextPrefs();
+		bindTestButton();
 	}
 
 	// The markup appears after this script has run.
