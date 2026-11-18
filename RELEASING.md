@@ -135,4 +135,4 @@ when posting a release or replying in the catalog PR.
 **收尾**
 
 - 删除本项目遗留的临时 Zotero profile 副本与脚手架（`_st_test_210949`、`_st_load_*`、`_zotero_smoke_*`、`_zotero_unpacked*`、`_st_update_clean`、`st-driver` 等），回收约 655 MB。
-- 仓库工作区干净，`main` 与 `origin/main` 同点（45be1b2）。
+- 仓库工作区干净，改动已推送，`main` 与 `origin/main` 同步。
