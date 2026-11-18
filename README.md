@@ -50,7 +50,7 @@
 | 译文文字颜色 | 系统取色器 + 常用色块；默认“自动对比”，可手动指定 |
 | 译文目标语言 | 默认简体中文 |
 | 译文最多行数 | 1–6，默认 3 |
-| 翻译引擎 | 自动 / 大模型 / DeepL / Google / MyMemory / Translate for Zotero，默认“自动” |
+| 翻译引擎 | 下拉顺序：自动 / Google / MyMemory / DeepL / 大模型 / Translate for Zotero，默认“自动”；实际尝试顺序见下方说明 |
 | DeepL API key | 可选，`…:fx` 结尾的 key 走免费端点 |
 | 大模型接口地址 / 模型 / key | 可选，OpenAI 兼容的 `/chat/completions`，如 DeepSeek、通义千问、Ollama |
 | 测试翻译 | 用固定例句实测当前引擎，直接显示引擎名和译文 |
