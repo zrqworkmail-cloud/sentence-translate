@@ -88,7 +88,7 @@ node test/live-providers.js    # 真实接口联调（需联网，可加 HTTPS_P
 - 句子切分是启发式的：参考文献条目、公式行和极端排版可能需要手动调整。
 - 旋转页面、扫描件（无文字层）不保证可用。
 - 译文是页面浮层，不写入 Zotero 注释。
-- 免密钥的 Google 接口和 MyMemory 都是公开服务，可能限流或随时变更（共享代理出口更容易触发 Google 429）；对稳定性有要求时建议填自己的 DeepL 或大模型 key。
+- 免密钥的 Google 接口和 MyMemory 走的是**未公开端点**（Google 用 `clients5.google.com` 的扩展端点，失败再试 `translate_a/single`），不保证长期可用：可能被限流、变更或直接下线（共享代理出口更容易触发 Google 429）。对稳定性有要求时建议填自己的 DeepL 或大模型 key。
 
 ## 许可证
 
