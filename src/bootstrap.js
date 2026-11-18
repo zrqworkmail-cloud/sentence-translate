@@ -15,6 +15,7 @@
 const PREF_PREFIX = "extensions.zotero.sentenceTranslate.";
 const DEFAULTS = {
 	enabled: true,
+	translate: true,
 	color: "#ffd23f",
 	opacity: 38,
 	stripColor: "#e6e6e6",
@@ -73,6 +74,7 @@ function pref(key) {
 function registerDefaults() {
 	const branch = Services.prefs.getDefaultBranch(PREF_PREFIX);
 	branch.setBoolPref("enabled", DEFAULTS.enabled);
+	branch.setBoolPref("translate", DEFAULTS.translate);
 	branch.setStringPref("color", DEFAULTS.color);
 	branch.setIntPref("opacity", DEFAULTS.opacity);
 	branch.setStringPref("stripColor", DEFAULTS.stripColor);
@@ -347,6 +349,10 @@ async function selectSentence(state, pageEl, pageIndex, xPct, yPct) {
 	if (!unit) return;
 
 	paintUnit(state, pageEl, unit, model);
+	// Highlighting stays useful on its own: with translation switched off the
+	// sentence is still tinted, but no request is made and no strip is drawn.
+	state.strip = null;
+	if (!pref("translate")) return;
 	const strip = makeStrip(state, pageEl, unit, model);
 	state.strip = strip;
 	translateUnit(state, unit, strip, seq);
