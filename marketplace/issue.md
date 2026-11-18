@@ -11,4 +11,4 @@
 
 实现：独立实现，不使用 Sentence Focus 或其他插件的代码。用 Zotero 10 的 `pdfDocument.getPageData({ pageIndex })` 取字符与 `viewBox`，把 PDF 左下原点坐标换算成左上原点并按页面百分比定位；按基线聚行、补回词间空格、识别双栏中缝、按句末标点切句；高亮矩形按字符比例切分，译文条按原句水平范围设置宽度，与原文句子同宽。仓库包含 MIT LICENSE、README、`updates.json` 和可复现的 `build.ps1`，纯文本几何层有 Node 测试。
 
-当前版本：0.3.0。翻译改为插件自带：「自动」链路为 大模型 → DeepL → Google（`clients5` 扩展端点）→ MyMemory，请求经 Zotero 的 HTTP 栈发出、跟随系统代理并带硬超时；设置页新增“翻译引擎”区（引擎选择、DeepL key、大模型地址/模型/key、测试翻译）。已在 Zotero 10.0.8 上用真实 PDF 点句验证。
+当前版本：0.3.1。新增「显示译文」开关：关掉后点句仍高亮句子，但不创建译文条、不发起翻译请求，适合只看原文；原「启用点句翻译」仍是总开关，关掉后连高亮一起停。翻译仍由插件自带：「自动」链路为 大模型 → DeepL → Google（`clients5` 扩展端点）→ MyMemory，请求经 Zotero 的 HTTP 栈发出、跟随系统代理并带硬超时；设置页另有“翻译引擎”区（引擎选择、DeepL key、大模型地址/模型/key、测试翻译）。已在 Zotero 10.0.8 上用真实 PDF 点句验证。

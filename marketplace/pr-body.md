@@ -2,7 +2,7 @@
 
 - 仓库：https://github.com/zrqworkmail-cloud/sentence-translate
 - 插件 ID：`sentence-translate@zrqworkmail-cloud.github.io`
-- 最新版本：v0.3.0
+- 最新版本：v0.3.1
 - 许可证：MIT
 - 兼容范围：Zotero 10（仅在 10.0.8 上验证）
 
