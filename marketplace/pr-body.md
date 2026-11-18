@@ -22,5 +22,6 @@
 - `releases: []`：暂不需要固定历史版本。
 - `publishInShadow: true`：外部清单尚未收录时，审核合并后可在 shadow 模式发布。若维护者希望由审核流程添加此标记，请直接调整。
 - 本地已用 TypeScript 6.0.3 对 `src/plugins.ts`、`src/types.ts` 做 `--noEmit` 校验，并通过 `git diff --check`。
+- 更新链路已实测：干净配置里 0.2.3 启动时自动升到 0.2.4；0.3.0 装好后用「工具 → 插件 → 齿轮 → Check for Updates」手动检查，识别出 1 个可用更新并装成 0.3.1，装上的 xpi 与发布包字节一致。
 
 关联投稿 issue：#367
