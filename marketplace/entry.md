@@ -25,5 +25,5 @@
 
 更新清单：https://github.com/zrqworkmail-cloud/sentence-translate/releases/latest/download/updates.json
 
-自动更新实测：已在干净配置实测 0.2.3 自动升级到 0.2.4；0.3.0、0.3.1 发布后 `latest/download/updates.json` 分别返回 0.3.0、0.3.1。
+更新实测：干净配置里 0.2.3 启动时自动升级到 0.2.4；0.3.0 装好后用「工具 → 插件 → 齿轮 → Check for Updates」手动检查，识别出 1 个可用更新并装成 0.3.1（日志为 `bootstrap … version 0.3.1 reason ADDON_INSTALL`，装上的 xpi 与发布包一字节不差）。`latest/download/updates.json` 分别返回 0.3.0、0.3.1。
 ```
