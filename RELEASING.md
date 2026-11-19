@@ -119,6 +119,7 @@ when posting a release or replying in the catalog PR.
 **面向用户**
 
 - 新增「显示译文」开关：关掉后点句仍高亮句子，但不创建译文条、不发起翻译请求；原「启用点句翻译」仍是总开关。
+- 从 0.3.1 起，「显示译文」关闭时插件不发出任何翻译请求，只做本地高亮渲染，因此不产生流量。
 - 翻译仍由插件自带（大模型 → DeepL → Google → MyMemory），不装 Translate for Zotero 也能用。
 
 **更新链路（本轮实测）**
