@@ -33,6 +33,10 @@
 
 `latest/download/updates.json` 当前返回 0.3.1。
 
+![v0.3.1 的 GitHub Release 页面实拍](docs/v0.3.1-release-page.png)
+
+*截图取自 Release 页面顶部，能看到标题、`Latest` 徽章和「新增」「更新链路」两节。*
+
 ## 使用
 
 - 单击句子：高亮该句，句下出现中文译文。
